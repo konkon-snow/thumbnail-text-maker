@@ -1,0 +1,570 @@
+/* ─── Design tokens ─── */
+:root {
+  --bg: #0d0d14;
+  --panel: #141420;
+  --card: #1e1e2e;
+  --input-bg: #252538;
+  --border: #2e2e44;
+  --text: #e2e2f0;
+  --muted: #6b6b8a;
+  --accent: #22d3ee;
+  --accent-bg: rgba(34, 211, 238, 0.12);
+  --accent-hover: #38e8ff;
+  --danger: #f87171;
+  --danger-bg: rgba(248, 113, 113, 0.12);
+  --radius: 6px;
+  --font-ui: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow: hidden;
+}
+
+/* ─── App layout ─── */
+.app {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ─── Side panel ─── */
+.side-panel {
+  width: 320px;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.app-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+}
+
+/* ─── Box list ─── */
+.box-list {
+  list-style: none;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  max-height: 130px;
+  overflow-y: auto;
+}
+
+.box-item {
+  display: flex;
+  align-items: center;
+  padding: 7px 14px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  transition: background .1s;
+  gap: 8px;
+}
+
+.box-item:last-child {
+  border-bottom: none;
+}
+
+.box-item:hover {
+  background: var(--card);
+}
+
+.box-item.selected {
+  background: var(--accent-bg);
+  border-left: 2px solid var(--accent);
+  padding-left: 12px;
+}
+
+.box-item-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.box-item-delete {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: var(--radius);
+  flex-shrink: 0;
+  transition: color .1s, background .1s;
+}
+
+.box-item-delete:hover {
+  color: var(--danger);
+  background: var(--danger-bg);
+}
+
+/* ─── Panel scroll area ─── */
+.panel-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.panel-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.panel-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.panel-scroll::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.empty-hint {
+  color: var(--muted);
+  text-align: center;
+  padding: 32px 16px;
+  line-height: 1.8;
+  font-size: 12px;
+}
+
+/* ─── Text panel ─── */
+.text-panel {
+  padding-bottom: 8px;
+}
+
+.panel-section {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.section-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.section-title-row .section-title {
+  margin-bottom: 0;
+}
+
+/* ─── Controls ─── */
+.row-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.row-control:last-child {
+  margin-bottom: 0;
+}
+
+.row-control label {
+  min-width: 52px;
+  font-size: 12px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.row-control input[type="range"] {
+  flex: 1;
+  accent-color: var(--accent);
+  height: 3px;
+  cursor: pointer;
+}
+
+.row-control select {
+  flex: 1;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 5px 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.row-control input[type="color"] {
+  width: 36px;
+  height: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2px;
+  background: var(--input-bg);
+  cursor: pointer;
+}
+
+.value-display {
+  min-width: 36px;
+  text-align: right;
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.input-unit {
+  display: flex;
+  align-items: center;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  flex: 1;
+}
+
+.input-unit input[type="number"] {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  padding: 5px 8px;
+  font-size: 12px;
+  width: 60px;
+  text-align: right;
+}
+
+.input-unit input[type="number"]:focus {
+  outline: none;
+}
+
+.input-unit .unit {
+  padding: 5px 8px 5px 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.text-input {
+  width: 100%;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 8px;
+  font-size: 13px;
+  resize: vertical;
+  font-family: var(--font-ui);
+  line-height: 1.6;
+}
+
+.text-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* ─── Font picker ─── */
+.font-picker {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.font-picker select {
+  flex: 1;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 6px 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* ─── Toggle group ─── */
+.toggle-group {
+  display: flex;
+  gap: 4px;
+}
+
+.toggle-btn {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  width: 32px;
+  height: 28px;
+  transition: background .1s, color .1s, border-color .1s;
+}
+
+.toggle-btn.active {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.italic-btn {
+  font-style: italic;
+}
+
+/* ─── Toggle switch ─── */
+.toggle-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.toggle-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-track {
+  display: block;
+  width: 32px;
+  height: 17px;
+  background: var(--border);
+  border-radius: 9px;
+  transition: background .15s;
+  position: relative;
+}
+
+.toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--muted);
+  transition: transform .15s, background .15s;
+}
+
+.toggle-switch input:checked + .toggle-track {
+  background: var(--accent-bg);
+  border: 1px solid var(--accent);
+}
+
+.toggle-switch input:checked + .toggle-track::after {
+  transform: translateX(15px);
+  background: var(--accent);
+}
+
+/* ─── Stroke layer ─── */
+.stroke-layer {
+  padding: 6px 0;
+  border-top: 1px solid var(--border);
+}
+
+.stroke-layer:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.stroke-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.stroke-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.stroke-label input[type="checkbox"] {
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.stroke-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stroke-inline input[type="color"] {
+  width: 28px;
+  height: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1px;
+  background: var(--input-bg);
+  cursor: pointer;
+}
+
+/* ─── Sub controls (shadow/gradient inner) ─── */
+.sub-controls {
+  padding-left: 4px;
+  padding-top: 4px;
+}
+
+/* ─── Export section ─── */
+.export-section {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ─── Buttons ─── */
+.btn-accent {
+  background: var(--accent-bg);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  white-space: nowrap;
+  transition: background .1s, color .1s;
+}
+
+.btn-accent:hover {
+  background: var(--accent);
+  color: #0d0d14;
+}
+
+.btn-accent:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-danger {
+  background: var(--danger-bg);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius);
+  color: var(--danger);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  transition: background .1s, color .1s;
+}
+
+.btn-danger:hover {
+  background: var(--danger);
+  color: #fff;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color .1s, color .1s;
+}
+
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-sm {
+  font-size: 11px;
+  padding: 4px 8px;
+  white-space: nowrap;
+}
+
+/* ─── Canvas area ─── */
+.canvas-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  background: var(--bg);
+  padding: 24px;
+}
+
+/* Checkered transparency pattern */
+.canvas-wrapper {
+  background-color: #101018;
+  background-image:
+    linear-gradient(45deg, #1a1a2a 25%, transparent 25%),
+    linear-gradient(-45deg, #1a1a2a 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #1a1a2a 75%),
+    linear-gradient(-45deg, transparent 75%, #1a1a2a 75%);
+  background-size: 18px 18px;
+  background-position: 0 0, 0 9px, 9px -9px, -9px 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+}
+
+.canvas-wrapper canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ─── Responsive (mobile) ─── */
+@media (max-width: 720px) {
+  .app {
+    flex-direction: column-reverse;
+  }
+
+  .side-panel {
+    width: 100%;
+    min-width: unset;
+    height: 50vh;
+    border-right: none;
+    border-top: 1px solid var(--border);
+  }
+
+  .canvas-area {
+    height: 50vh;
+    padding: 8px;
+  }
+}
