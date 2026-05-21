@@ -112,6 +112,24 @@ body {
   color: var(--text);
 }
 
+.drag-handle {
+  color: var(--muted);
+  font-size: 14px;
+  cursor: grab;
+  flex-shrink: 0;
+  line-height: 1;
+  user-select: none;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.box-item.drag-over {
+  border-top: 2px solid var(--accent);
+  background: var(--accent-bg);
+}
+
 .box-item-delete {
   background: none;
   border: none;
@@ -300,8 +318,19 @@ body {
   margin-bottom: 8px;
 }
 
-.font-picker select {
+/* ─── Font custom dropdown ─── */
+.font-dropdown {
+  position: relative;
   flex: 1;
+  min-width: 0;
+}
+
+.font-dropdown-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
   background: var(--input-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -309,6 +338,86 @@ body {
   padding: 6px 8px;
   font-size: 13px;
   cursor: pointer;
+  text-align: left;
+  transition: border-color .1s;
+}
+
+.font-dropdown-trigger:hover {
+  border-color: var(--accent);
+}
+
+.font-dropdown-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.font-dropdown-arrow {
+  color: var(--muted);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.font-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  z-index: 200;
+  max-height: 260px;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.font-dropdown-menu::-webkit-scrollbar {
+  width: 4px;
+}
+
+.font-dropdown-menu::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.font-dropdown-group {
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.font-dropdown-group:last-child {
+  border-bottom: none;
+}
+
+.font-dropdown-grouplabel {
+  padding: 4px 10px 2px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  user-select: none;
+}
+
+.font-dropdown-item {
+  padding: 6px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  color: var(--text);
+  transition: background .08s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.font-dropdown-item:hover {
+  background: var(--accent-bg);
+}
+
+.font-dropdown-item.selected {
+  color: var(--accent);
+  background: var(--accent-bg);
 }
 
 /* ─── Toggle group ─── */

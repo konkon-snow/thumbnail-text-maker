@@ -53,6 +53,22 @@ export function getBoundingBox(
   };
 }
 
+export function getCenteredPosition(
+  box: TextBox,
+  canvasWidth: number,
+  canvasHeight: number,
+): { x: number; y: number } {
+  const offscreen = document.createElement('canvas');
+  const ctx = offscreen.getContext('2d')!;
+  const { lines, maxWidth, lineHeightPx } = measureLines(ctx, box);
+  const totalHeight = lines.length * lineHeightPx;
+  const totalStroke = box.strokes.reduce((acc, s) => (s.enabled ? acc + s.width : acc), 0);
+  return {
+    x: Math.round((canvasWidth - maxWidth) / 2 - totalStroke),
+    y: Math.round((canvasHeight - totalHeight) / 2 - totalStroke),
+  };
+}
+
 export function drawTextBox(ctx: Ctx, box: TextBox, options: { selected?: boolean } = {}): void {
   ctx.save();
   ctx.textBaseline = 'top';
@@ -160,6 +176,7 @@ export function renderAll(
   snapLines: SnapLine[],
   canvasWidth: number,
   canvasHeight: number,
+  exportPadding?: number,
 ): void {
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
@@ -187,15 +204,41 @@ export function renderAll(
   for (const box of textBoxes) {
     drawTextBox(ctx, box, { selected: box.id === selectedId });
   }
+
+  // Export bounds guide
+  if (exportPadding !== undefined && textBoxes.length > 0) {
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const box of textBoxes) {
+      const bb = getBoundingBox(ctx, box);
+      minX = Math.min(minX, bb.x);
+      minY = Math.min(minY, bb.y);
+      maxX = Math.max(maxX, bb.x + bb.width);
+      maxY = Math.max(maxY, bb.y + bb.height);
+    }
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255, 200, 50, 0.6)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([5, 4]);
+    ctx.strokeRect(
+      minX - exportPadding,
+      minY - exportPadding,
+      maxX - minX + exportPadding * 2,
+      maxY - minY + exportPadding * 2,
+    );
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(255, 200, 50, 0.7)';
+    ctx.font = '11px system-ui, sans-serif';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText(`書き出し余白 ${exportPadding}px`, minX - exportPadding + 4, minY - exportPadding - 2);
+    ctx.restore();
+  }
 }
 
 export function exportToPng(textBoxes: TextBox[], padding: number): string {
   if (textBoxes.length === 0) return '';
 
-  // Offscreen canvas for measuring
+  // measureText is canvas-size independent; default 300x150 is sufficient
   const measureCanvas = document.createElement('canvas');
-  measureCanvas.width = 4000;
-  measureCanvas.height = 4000;
   const measureCtx = measureCanvas.getContext('2d')!;
 
   let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;

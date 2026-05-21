@@ -1,14 +1,15 @@
 import { useState, useCallback, useRef } from 'react';
 import type { TextBox } from './types';
-import { CanvasPreview } from './components/Canvas/CanvasPreview';
+import { CanvasPreview, CANVAS_WIDTH, CANVAS_HEIGHT } from './components/Canvas/CanvasPreview';
 import { TextPanel } from './components/TextPanel/TextPanel';
+import { getCenteredPosition } from './utils/canvasRenderer';
 
 function createDefaultBox(): TextBox {
   return {
     id: crypto.randomUUID(),
     text: 'サムネイルテキスト',
-    x: 80,
-    y: 80,
+    x: 0,
+    y: 0,
     fontFamily: 'Dela Gothic One',
     fontSize: 72,
     color: '#ffffff',
@@ -34,20 +35,34 @@ function createDefaultBox(): TextBox {
 }
 
 export default function App() {
-  const [textBoxes, setTextBoxes] = useState<TextBox[]>(() => [createDefaultBox()]);
+  const [textBoxes, setTextBoxes] = useState<TextBox[]>(() => {
+    const box = createDefaultBox();
+    const pos = getCenteredPosition(box, CANVAS_WIDTH, CANVAS_HEIGHT);
+    return [{ ...box, ...pos }];
+  });
   const [selectedId, setSelectedId] = useState<string | null>(() => textBoxes[0]?.id ?? null);
   const [exportPadding, setExportPadding] = useState(40);
   const [localFonts, setLocalFonts] = useState<string[]>([]);
   const downloadRef = useRef<() => void>(() => {});
+  const dragIndexRef = useRef<number | null>(null);
 
   const selectedBox = textBoxes.find(b => b.id === selectedId) ?? null;
 
   const addBox = useCallback(() => {
     const box = createDefaultBox();
-    box.x = 40 + Math.floor(Math.random() * 160);
-    box.y = 40 + Math.floor(Math.random() * 120);
-    setTextBoxes(prev => [...prev, box]);
-    setSelectedId(box.id);
+    const pos = getCenteredPosition(box, CANVAS_WIDTH, CANVAS_HEIGHT);
+    const centered = { ...box, ...pos };
+    setTextBoxes(prev => [...prev, centered]);
+    setSelectedId(centered.id);
+  }, []);
+
+  const reorderBoxes = useCallback((from: number, to: number) => {
+    setTextBoxes(prev => {
+      const next = [...prev];
+      const [removed] = next.splice(from, 1);
+      next.splice(to, 0, removed);
+      return next;
+    });
   }, []);
 
   const deleteBox = useCallback((id: string) => {
@@ -84,15 +99,34 @@ export default function App() {
         {/* テキストボックス一覧 */}
         {textBoxes.length > 0 && (
           <ul className="box-list">
-            {textBoxes.map(box => (
+            {textBoxes.map((box, index) => (
               <li
                 key={box.id}
                 className={`box-item ${box.id === selectedId ? 'selected' : ''}`}
+                draggable
+                onDragStart={() => { dragIndexRef.current = index; }}
+                onDragOver={e => {
+                  e.preventDefault();
+                  e.currentTarget.classList.add('drag-over');
+                }}
+                onDragLeave={e => { e.currentTarget.classList.remove('drag-over'); }}
+                onDrop={e => {
+                  e.currentTarget.classList.remove('drag-over');
+                  if (dragIndexRef.current !== null && dragIndexRef.current !== index) {
+                    reorderBoxes(dragIndexRef.current, index);
+                  }
+                  dragIndexRef.current = null;
+                }}
+                onDragEnd={() => {
+                  dragIndexRef.current = null;
+                  document.querySelectorAll('.box-item').forEach(el => el.classList.remove('drag-over'));
+                }}
                 onClick={() => setSelectedId(box.id)}
-                role="button"
+                role="listitem"
                 tabIndex={0}
                 onKeyDown={e => e.key === 'Enter' && setSelectedId(box.id)}
               >
+                <span className="drag-handle" aria-hidden="true">⠿</span>
                 <span className="box-item-text">{box.text.split('\n')[0].slice(0, 20) || '（空）'}</span>
                 <button
                   className="box-item-delete"
@@ -128,7 +162,7 @@ export default function App() {
         {/* エクスポート設定 */}
         <div className="export-section">
           <div className="row-control">
-            <label>余白</label>
+            <label>書き出し余白</label>
             <input
               type="range"
               min={0}

@@ -31,6 +31,8 @@ export function TextPanel({ box, onChange, onDelete, localFonts, onLocalFontAdd 
         <FontPicker
           value={box.fontFamily}
           onChange={fontFamily => onChange({ fontFamily })}
+          onPreview={f => onChange({ fontFamily: f })}
+          onPreviewEnd={f => onChange({ fontFamily: f })}
           localFonts={localFonts}
           onLocalFontAdd={onLocalFontAdd}
         />

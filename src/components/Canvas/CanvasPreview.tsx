@@ -36,6 +36,7 @@ export function CanvasPreview({ textBoxes, selectedId, padding, onSelect, onMove
     snapLines,
     width: CANVAS_WIDTH,
     height: CANVAS_HEIGHT,
+    exportPadding: padding,
   });
 
   useEffect(() => {
@@ -47,7 +48,7 @@ export function CanvasPreview({ textBoxes, selectedId, padding, onSelect, onMove
       a.download = 'thumbnail-text.png';
       a.click();
     };
-  });
+  }, [textBoxes, padding]);
 
   return (
     <div className="canvas-wrapper">
