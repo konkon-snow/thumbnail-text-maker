@@ -30,9 +30,8 @@ export function TextPanel({ box, onChange, onDelete, localFonts, onLocalFontAdd 
         <h3 className="section-title">フォント</h3>
         <FontPicker
           value={box.fontFamily}
+          previewText={box.text}
           onChange={fontFamily => onChange({ fontFamily })}
-          onPreview={f => onChange({ fontFamily: f })}
-          onPreviewEnd={f => onChange({ fontFamily: f })}
           localFonts={localFonts}
           onLocalFontAdd={onLocalFontAdd}
         />

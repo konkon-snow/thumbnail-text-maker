@@ -1,44 +1,18 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import type { ChangeEvent } from 'react';
-import { FONT_CATEGORIES } from '../../utils/canvasRenderer';
+import { FontPickerModal } from './FontPickerModal';
 
 interface Props {
   value: string;
+  previewText: string;
   onChange: (fontFamily: string) => void;
-  onPreview?: (font: string) => void;
-  onPreviewEnd?: (originalFont: string) => void;
   localFonts: string[];
   onLocalFontAdd: (fontFamily: string) => void;
 }
 
-export function FontPicker({ value, onChange, onPreview, onPreviewEnd, localFonts, onLocalFontAdd }: Props) {
+export function FontPicker({ value, previewText, onChange, localFonts, onLocalFontAdd }: Props) {
   const [isOpen, setIsOpen] = useState(false);
-  const originalFontRef = useRef(value);
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        onPreviewEnd?.(originalFontRef.current);
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleOutsideClick);
-    return () => document.removeEventListener('mousedown', handleOutsideClick);
-  }, [isOpen, onPreviewEnd]);
-
-  const handleTriggerClick = () => {
-    originalFontRef.current = value;
-    setIsOpen(o => !o);
-  };
-
-  const handleOptionClick = (font: string) => {
-    originalFontRef.current = font;
-    onChange(font);
-    setIsOpen(false);
-  };
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -59,63 +33,16 @@ export function FontPicker({ value, onChange, onPreview, onPreviewEnd, localFont
 
   return (
     <div className="font-picker">
-      <div className="font-dropdown" ref={dropdownRef}>
-        <button
-          type="button"
-          className="font-dropdown-trigger"
-          style={{ fontFamily: value }}
-          onClick={handleTriggerClick}
-          aria-haspopup="listbox"
-          aria-expanded={isOpen}
-        >
-          <span className="font-dropdown-label">{value}</span>
-          <span className="font-dropdown-arrow" aria-hidden="true">▾</span>
-        </button>
-
-        {isOpen && (
-          <div
-            className="font-dropdown-menu"
-            role="listbox"
-            onMouseLeave={() => onPreviewEnd?.(originalFontRef.current)}
-          >
-            {FONT_CATEGORIES.map(cat => (
-              <div key={cat.label} className="font-dropdown-group">
-                <div className="font-dropdown-grouplabel">{cat.label}</div>
-                {cat.fonts.map(f => (
-                  <div
-                    key={f}
-                    role="option"
-                    aria-selected={f === value}
-                    className={`font-dropdown-item ${f === value ? 'selected' : ''}`}
-                    style={{ fontFamily: f }}
-                    onMouseEnter={() => onPreview?.(f)}
-                    onClick={() => handleOptionClick(f)}
-                  >
-                    {f}
-                  </div>
-                ))}
-              </div>
-            ))}
-            {localFonts.length > 0 && (
-              <div className="font-dropdown-group">
-                <div className="font-dropdown-grouplabel">ローカルフォント</div>
-                {localFonts.map(f => (
-                  <div
-                    key={f}
-                    role="option"
-                    aria-selected={f === value}
-                    className={`font-dropdown-item ${f === value ? 'selected' : ''}`}
-                    onMouseEnter={() => onPreview?.(f)}
-                    onClick={() => handleOptionClick(f)}
-                  >
-                    {f}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+      <button
+        type="button"
+        className="font-dropdown-trigger"
+        style={{ fontFamily: value, flex: 1 }}
+        onClick={() => setIsOpen(true)}
+        aria-haspopup="dialog"
+      >
+        <span className="font-dropdown-label">{value}</span>
+        <span className="font-dropdown-arrow" aria-hidden="true">▾</span>
+      </button>
 
       <button
         className="btn-outline btn-sm"
@@ -131,6 +58,16 @@ export function FontPicker({ value, onChange, onPreview, onPreviewEnd, localFont
         style={{ display: 'none' }}
         onChange={handleFileChange}
       />
+
+      {isOpen && (
+        <FontPickerModal
+          currentFont={value}
+          previewText={previewText}
+          localFonts={localFonts}
+          onSelect={font => { onChange(font); setIsOpen(false); }}
+          onClose={() => setIsOpen(false)}
+        />
+      )}
     </div>
   );
 }
