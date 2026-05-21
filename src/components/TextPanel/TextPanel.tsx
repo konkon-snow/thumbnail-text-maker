@@ -2,6 +2,7 @@ import type { TextBox } from '../../types';
 import type { AlignH, AlignV } from '../../utils/canvasRenderer';
 import { FontPicker } from '../FontPicker/FontPicker';
 import { StrokeLayerPanel } from '../StrokeLayer/StrokeLayerPanel';
+import { StylePresets } from './StylePresets';
 
 interface Props {
   box: TextBox;
@@ -127,6 +128,9 @@ export function TextPanel({ box, onChange, onDelete, onAlign, localFonts, onLoca
           <span className="value-display">{box.lineHeight.toFixed(1)}</span>
         </div>
       </section>
+
+      {/* スタイルプリセット */}
+      <StylePresets onChange={onChange} />
 
       {/* 縁取り */}
       <section className="panel-section">
