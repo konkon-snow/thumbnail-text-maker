@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { TextBox } from '../../types';
 import type { AlignH, AlignV } from '../../utils/canvasRenderer';
 import { FontPicker } from '../FontPicker/FontPicker';
@@ -13,7 +14,7 @@ interface Props {
   onLocalFontAdd: (name: string) => void;
 }
 
-export function TextPanel({ box, onChange, onDelete, onAlign, localFonts, onLocalFontAdd }: Props) {
+export const TextPanel = memo(function TextPanel({ box, onChange, onDelete, onAlign, localFonts, onLocalFontAdd }: Props) {
   return (
     <div className="text-panel">
 
@@ -279,4 +280,4 @@ export function TextPanel({ box, onChange, onDelete, onAlign, localFonts, onLoca
       </div>
     </div>
   );
-}
+});

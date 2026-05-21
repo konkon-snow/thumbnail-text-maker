@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useMemo } from 'react';
 import type { TextBox } from './types';
 import { CanvasPreview, CANVAS_WIDTH, CANVAS_HEIGHT } from './components/Canvas/CanvasPreview';
 import { TextPanel } from './components/TextPanel/TextPanel';
@@ -47,7 +47,10 @@ export default function App() {
   const downloadRef = useRef<() => void>(() => {});
   const dragIndexRef = useRef<number | null>(null);
 
-  const selectedBox = textBoxes.find(b => b.id === selectedId) ?? null;
+  const selectedBox = useMemo(
+    () => textBoxes.find(b => b.id === selectedId) ?? null,
+    [textBoxes, selectedId],
+  );
 
   const addBox = useCallback(() => {
     const box = createDefaultBox();
@@ -93,6 +96,19 @@ export default function App() {
   const addLocalFont = useCallback((name: string) => {
     setLocalFonts(prev => (prev.includes(name) ? prev : [...prev, name]));
   }, []);
+
+  const handleChange = useCallback(
+    (updates: Partial<TextBox>) => { if (selectedId) updateBox(selectedId, updates); },
+    [selectedId, updateBox],
+  );
+  const handleDelete = useCallback(
+    () => { if (selectedId) deleteBox(selectedId); },
+    [selectedId, deleteBox],
+  );
+  const handleAlign = useCallback(
+    (alignH: AlignH | null, alignV: AlignV | null) => { if (selectedId) alignBox(selectedId, alignH, alignV); },
+    [selectedId, alignBox],
+  );
 
   return (
     <div className="app">
@@ -158,9 +174,9 @@ export default function App() {
           {selectedBox ? (
             <TextPanel
               box={selectedBox}
-              onChange={updates => updateBox(selectedBox.id, updates)}
-              onDelete={() => deleteBox(selectedBox.id)}
-              onAlign={(alignH, alignV) => alignBox(selectedBox.id, alignH, alignV)}
+              onChange={handleChange}
+              onDelete={handleDelete}
+              onAlign={handleAlign}
               localFonts={localFonts}
               onLocalFontAdd={addLocalFont}
             />

@@ -20,6 +20,11 @@ interface Props {
 export function CanvasPreview({ textBoxes, selectedId, padding, onSelect, onMove, downloadRef }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  const textBoxesRef = useRef(textBoxes);
+  textBoxesRef.current = textBoxes;
+  const paddingRef = useRef(padding);
+  paddingRef.current = padding;
+
   const { handleMouseDown, handleMouseMove, handleMouseUp, isDragging, snapLines } = useDrag({
     textBoxes,
     canvasRef,
@@ -41,14 +46,15 @@ export function CanvasPreview({ textBoxes, selectedId, padding, onSelect, onMove
 
   useEffect(() => {
     downloadRef.current = () => {
-      const url = exportToPng(textBoxes, padding);
+      const url = exportToPng(textBoxesRef.current, paddingRef.current);
       if (!url) return;
       const a = document.createElement('a');
       a.href = url;
       a.download = 'thumbnail-text.png';
       a.click();
     };
-  }, [textBoxes, padding]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="canvas-wrapper">

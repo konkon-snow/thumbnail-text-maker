@@ -29,9 +29,15 @@ export function useCanvas({ canvasRef, textBoxes, selectedId, snapLines, width, 
 
   // Re-render after web fonts load (initial + dynamic font additions)
   useEffect(() => {
-    const rerender = () => renderRef.current();
+    let mounted = true;
+    const rerender = () => {
+      if (mounted) renderRef.current();
+    };
     document.fonts.ready.then(rerender);
     document.fonts.addEventListener('loadingdone', rerender);
-    return () => document.fonts.removeEventListener('loadingdone', rerender);
+    return () => {
+      mounted = false;
+      document.fonts.removeEventListener('loadingdone', rerender);
+    };
   }, []);
 }

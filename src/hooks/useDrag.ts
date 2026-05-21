@@ -28,6 +28,9 @@ export function useDrag({ textBoxes, canvasRef, canvasWidth, canvasHeight, onSel
   const textBoxesRef = useRef(textBoxes);
   textBoxesRef.current = textBoxes;
 
+  const rafIdRef = useRef<number | null>(null);
+  const pendingCoordsRef = useRef<{ x: number; y: number } | null>(null);
+
   const toCanvasCoords = useCallback(
     (e: MouseEvent<HTMLCanvasElement>): { x: number; y: number } => {
       const canvas = e.currentTarget;
@@ -71,32 +74,44 @@ export function useDrag({ textBoxes, canvasRef, canvasWidth, canvasHeight, onSel
 
   const handleMouseMove = useCallback(
     (e: MouseEvent<HTMLCanvasElement>) => {
-      const drag = dragRef.current;
-      if (!drag) return;
+      if (!dragRef.current) return;
 
-      const { x, y } = toCanvasCoords(e);
-      const rawX = x - drag.offsetX;
-      const rawY = y - drag.offsetY;
+      // 座標を即座に取り出してrefに保存（高頻度イベントのデータ保持）
+      pendingCoordsRef.current = toCanvasCoords(e);
+      if (rafIdRef.current !== null) return;
 
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d')!;
+      rafIdRef.current = requestAnimationFrame(() => {
+        rafIdRef.current = null;
+        const coords = pendingCoordsRef.current;
+        const drag = dragRef.current;
+        if (!coords || !drag) return;
 
-      const draggingBox = textBoxesRef.current.find(b => b.id === drag.id);
-      if (!draggingBox) return;
+        const rawX = coords.x - drag.offsetX;
+        const rawY = coords.y - drag.offsetY;
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d')!;
 
-      const tempBox: TextBox = { ...draggingBox, x: rawX, y: rawY };
-      const snap = calculateSnap(tempBox, textBoxesRef.current, canvasWidth, canvasHeight, b =>
-        getBoundingBox(ctx, b),
-      );
+        const draggingBox = textBoxesRef.current.find(b => b.id === drag.id);
+        if (!draggingBox) return;
 
-      setSnapLines(snap.lines);
-      onMove(drag.id, snap.x, snap.y);
+        const tempBox: TextBox = { ...draggingBox, x: rawX, y: rawY };
+        const snap = calculateSnap(tempBox, textBoxesRef.current, canvasWidth, canvasHeight, b =>
+          getBoundingBox(ctx, b),
+        );
+        setSnapLines(snap.lines);
+        onMove(drag.id, snap.x, snap.y);
+      });
     },
     [toCanvasCoords, canvasRef, canvasWidth, canvasHeight, onMove],
   );
 
   const handleMouseUp = useCallback(() => {
+    if (rafIdRef.current !== null) {
+      cancelAnimationFrame(rafIdRef.current);
+      rafIdRef.current = null;
+    }
+    pendingCoordsRef.current = null;
     dragRef.current = null;
     setIsDragging(false);
     setSnapLines([]);
