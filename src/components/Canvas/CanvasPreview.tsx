@@ -48,9 +48,20 @@ export function CanvasPreview({ textBoxes, selectedId, padding, onSelect, onMove
     downloadRef.current = () => {
       const url = exportToPng(textBoxesRef.current, paddingRef.current);
       if (!url) return;
+      const ts = new Date()
+        .toLocaleString('sv-SE', {
+          timeZone: 'Asia/Tokyo',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        })
+        .replace(/[^0-9]/g, '');
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'thumbnail-text.png';
+      a.download = `thumbnail-text_${ts}.png`;
       a.click();
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
