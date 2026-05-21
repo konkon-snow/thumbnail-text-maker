@@ -1,4 +1,5 @@
 import type { TextBox } from '../../types';
+import type { AlignH, AlignV } from '../../utils/canvasRenderer';
 import { FontPicker } from '../FontPicker/FontPicker';
 import { StrokeLayerPanel } from '../StrokeLayer/StrokeLayerPanel';
 
@@ -6,13 +7,35 @@ interface Props {
   box: TextBox;
   onChange: (updates: Partial<TextBox>) => void;
   onDelete: () => void;
+  onAlign: (alignH: AlignH | null, alignV: AlignV | null) => void;
   localFonts: string[];
   onLocalFontAdd: (name: string) => void;
 }
 
-export function TextPanel({ box, onChange, onDelete, localFonts, onLocalFontAdd }: Props) {
+export function TextPanel({ box, onChange, onDelete, onAlign, localFonts, onLocalFontAdd }: Props) {
   return (
     <div className="text-panel">
+
+      {/* 配置 */}
+      <section className="panel-section">
+        <h3 className="section-title">配置</h3>
+        <div className="row-control">
+          <label>水平</label>
+          <div className="toggle-group">
+            <button className="toggle-btn" type="button" title="左端" onClick={() => onAlign('left', null)}>⇤</button>
+            <button className="toggle-btn" type="button" title="中央" onClick={() => onAlign('center', null)}>↔</button>
+            <button className="toggle-btn" type="button" title="右端" onClick={() => onAlign('right', null)}>⇥</button>
+          </div>
+        </div>
+        <div className="row-control">
+          <label>垂直</label>
+          <div className="toggle-group">
+            <button className="toggle-btn" type="button" title="上端" onClick={() => onAlign(null, 'top')}>⇡</button>
+            <button className="toggle-btn" type="button" title="中央" onClick={() => onAlign(null, 'middle')}>↕</button>
+            <button className="toggle-btn" type="button" title="下端" onClick={() => onAlign(null, 'bottom')}>⇣</button>
+          </div>
+        </div>
+      </section>
 
       {/* テキスト */}
       <section className="panel-section">

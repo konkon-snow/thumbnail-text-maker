@@ -2,7 +2,8 @@ import { useState, useCallback, useRef } from 'react';
 import type { TextBox } from './types';
 import { CanvasPreview, CANVAS_WIDTH, CANVAS_HEIGHT } from './components/Canvas/CanvasPreview';
 import { TextPanel } from './components/TextPanel/TextPanel';
-import { getCenteredPosition } from './utils/canvasRenderer';
+import { getCenteredPosition, getAlignedPosition } from './utils/canvasRenderer';
+import type { AlignH, AlignV } from './utils/canvasRenderer';
 
 function createDefaultBox(): TextBox {
   return {
@@ -81,6 +82,14 @@ export default function App() {
     setTextBoxes(prev => prev.map(b => (b.id === id ? { ...b, x, y } : b)));
   }, []);
 
+  const alignBox = useCallback((id: string, alignH: AlignH | null, alignV: AlignV | null) => {
+    setTextBoxes(prev => prev.map(b => {
+      if (b.id !== id) return b;
+      const pos = getAlignedPosition(b, CANVAS_WIDTH, CANVAS_HEIGHT, alignH, alignV);
+      return { ...b, ...pos };
+    }));
+  }, []);
+
   const addLocalFont = useCallback((name: string) => {
     setLocalFonts(prev => (prev.includes(name) ? prev : [...prev, name]));
   }, []);
@@ -151,6 +160,7 @@ export default function App() {
               box={selectedBox}
               onChange={updates => updateBox(selectedBox.id, updates)}
               onDelete={() => deleteBox(selectedBox.id)}
+              onAlign={(alignH, alignV) => alignBox(selectedBox.id, alignH, alignV)}
               localFonts={localFonts}
               onLocalFontAdd={addLocalFont}
             />

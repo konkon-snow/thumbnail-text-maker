@@ -6,7 +6,9 @@ export const FONT_CATEGORIES = [
   { label: '丸ゴシック', fonts: ['Zen Maru Gothic', 'Rounded Mplus 1c'] },
   { label: '明朝', fonts: ['Noto Serif JP', 'Shippori Mincho'] },
   { label: '手書き風', fonts: ['Klee One', 'Yomogi'] },
-  { label: '英語', fonts: ['Bebas Neue', 'Oswald', 'Anton'] },
+  { label: 'ゲーム日本語', fonts: ['Rampart One', 'Reggae One', 'Hachi Maru Pop'] },
+  { label: 'ドット/レトロ', fonts: ['DotGothic16', 'New Tegomin'] },
+  { label: '英語', fonts: ['Bebas Neue', 'Oswald', 'Anton', 'Orbitron', 'Russo One', 'Press Start 2P'] },
 ] as const;
 
 type Ctx = CanvasRenderingContext2D;
@@ -67,6 +69,36 @@ export function getCenteredPosition(
     x: Math.round((canvasWidth - maxWidth) / 2 - totalStroke),
     y: Math.round((canvasHeight - totalHeight) / 2 - totalStroke),
   };
+}
+
+export type AlignH = 'left' | 'center' | 'right';
+export type AlignV = 'top' | 'middle' | 'bottom';
+
+export function getAlignedPosition(
+  box: TextBox,
+  canvasWidth: number,
+  canvasHeight: number,
+  alignH: AlignH | null,
+  alignV: AlignV | null,
+): { x: number; y: number } {
+  const offscreen = document.createElement('canvas');
+  const ctx = offscreen.getContext('2d')!;
+  const { lines, maxWidth, lineHeightPx } = measureLines(ctx, box);
+  const totalHeight = lines.length * lineHeightPx;
+  const totalStroke = box.strokes.reduce((acc, s) => (s.enabled ? acc + s.width : acc), 0);
+
+  let x = box.x;
+  let y = box.y;
+
+  if (alignH === 'left')   x = totalStroke;
+  if (alignH === 'center') x = Math.round((canvasWidth - maxWidth) / 2 - totalStroke);
+  if (alignH === 'right')  x = Math.round(canvasWidth - maxWidth - totalStroke);
+
+  if (alignV === 'top')    y = totalStroke;
+  if (alignV === 'middle') y = Math.round((canvasHeight - totalHeight) / 2 - totalStroke);
+  if (alignV === 'bottom') y = Math.round(canvasHeight - totalHeight - totalStroke);
+
+  return { x, y };
 }
 
 export function drawTextBox(ctx: Ctx, box: TextBox, options: { selected?: boolean } = {}): void {
