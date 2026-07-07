@@ -1,5 +1,7 @@
 import { defineCategory, preset } from './helpers';
 
+// 注意: プリセット id は配列 index から生成される。既存要素の途中挿入・削除・並べ替えは禁止（末尾追加のみ可）
+
 export const retroCategory = defineCategory('retro', 'レトロ・ドット', [
   preset({
     name: 'CRTグリーン', font: 'DotGothic16', color: '#33ff66',
@@ -64,5 +66,32 @@ export const retroCategory = defineCategory('retro', 'レトロ・ドット', [
     strokes: [{ color: '#ffffff', width: 4 }],
     shadow: { opacity: 0.45 },
     gradient: { from: '#7ad4ff', to: '#2b6cb8' },
+  }),
+  preset({
+    name: 'ネオン喫茶', font: 'Stick', color: '#ffd1ec',
+    strokes: [{ color: '#5c1040', width: 4 }],
+    shadow: { color: '#ff4fc3', opacity: 0.7, blur: 16, offsetX: 0, offsetY: 0 },
+  }),
+  preset({
+    name: '昭和家電', font: 'Stick', color: '#fff6e0', bold: true,
+    strokes: [{ color: '#d95f18', width: 5 }, { color: '#3a2410', width: 2 }],
+    shadow: { opacity: 0.5, blur: 0 },
+  }),
+  preset({
+    name: 'メロンソーダ', font: 'Stick', color: '#66d95c', bold: true,
+    strokes: [{ color: '#0f4d1a', width: 5 }],
+    shadow: { color: '#ff5c5c', opacity: 0.5, blur: 0, offsetX: 4, offsetY: 4 },
+    gradient: { from: '#a8f57a', to: '#2eb82e' },
+  }),
+  preset({
+    name: 'ブラウン管RGB', font: 'DotGothic16', color: '#ffffff',
+    strokes: [{ color: '#000000', width: 5 }],
+    shadow: { opacity: 0.6, blur: 0, offsetX: 3, offsetY: 3 },
+    gradient: { from: '#ff5c5c', via: '#7aff8c', to: '#5c8aff', direction: 'diagonal' },
+  }),
+  preset({
+    name: 'カセット金', font: 'Press Start 2P', color: '#ffd24d', spacing: 0,
+    strokes: [{ color: '#5c3a00', width: 3 }, { color: '#fff2cc', width: 2 }],
+    shadow: { opacity: 0.8, blur: 0, offsetX: 4, offsetY: 4 },
   }),
 ]);

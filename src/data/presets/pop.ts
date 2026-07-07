@@ -1,5 +1,6 @@
 import { defineCategory, preset } from './helpers';
 
+// 注意: プリセット id は配列 index から生成される。既存要素の途中挿入・削除・並べ替えは禁止（末尾追加のみ可）
 export const popCategory = defineCategory('pop', 'ポップ・バラエティ', [
   preset({
     name: 'バラエティ黄', font: 'Dela Gothic One', color: '#ffe600',
@@ -82,5 +83,52 @@ export const popCategory = defineCategory('pop', 'ポップ・バラエティ', 
       { color: '#111111', width: 2 },
     ],
     shadow: { opacity: 0.7 },
+  }),
+  preset({
+    name: 'キャンディレインボー', font: 'Mochiy Pop One', color: '#ff66b8',
+    strokes: [{ color: '#ffffff', width: 5 }, { color: '#3a2a4a', width: 2 }],
+    shadow: { opacity: 0.45 },
+    gradient: { from: '#ff5fa2', via: '#ffd400', to: '#3ec6ff', direction: 'horizontal' },
+  }),
+  preset({
+    name: 'ミルクキャラメル', font: 'Potta One', color: '#fff1d6',
+    strokes: [{ color: '#5a3d1e', width: 7 }],
+    shadow: { opacity: 0.45 },
+  }),
+  preset({
+    name: 'チェリーボム', font: 'Cherry Bomb One', color: '#ffffff',
+    strokes: [{ color: '#e6003c', width: 7 }, { color: '#57000f', width: 3 }],
+    shadow: { opacity: 0.6 },
+  }),
+  preset({
+    name: 'トロピカルグラデ', font: 'Potta One', color: '#ff7a00',
+    strokes: [{ color: '#ffffff', width: 5 }, { color: '#5c1030', width: 2 }],
+    shadow: { opacity: 0.5 },
+    gradient: { from: '#ffd400', via: '#ff7a00', to: '#ff2d78', direction: 'diagonal' },
+  }),
+  preset({
+    name: 'ビビッド三重', font: 'Potta One', color: '#ffffff',
+    strokes: [
+      { color: '#ff2d78', width: 6 },
+      { color: '#ffe600', width: 4 },
+      { color: '#2b1a4a', width: 2 },
+    ],
+    shadow: { opacity: 0.65 },
+  }),
+  preset({
+    name: 'ターコイズポップ', font: 'Cherry Bomb One', color: '#00d5c8',
+    strokes: [{ color: '#ffffff', width: 5 }, { color: '#064d48', width: 2 }],
+    shadow: { opacity: 0.5 },
+  }),
+  preset({
+    name: 'パーティーパープル', font: 'Mochiy Pop One', color: '#ffe600',
+    strokes: [{ color: '#7a1fbf', width: 7 }, { color: '#ffffff', width: 3 }],
+    shadow: { opacity: 0.55 },
+  }),
+  preset({
+    name: 'オーロラポップ', font: 'Mochiy Pop One', color: '#8ae1ff',
+    strokes: [{ color: '#ffffff', width: 5 }, { color: '#2a3a5c', width: 2 }],
+    shadow: { opacity: 0.4 },
+    gradient: { from: '#8ae1ff', to: '#ff9ad5', direction: 'diagonal' },
   }),
 ]);

@@ -1,5 +1,6 @@
 import { defineCategory, preset } from './helpers';
 
+// 注意: プリセット id は配列 index から生成される。既存要素の途中挿入・削除・並べ替えは禁止（末尾追加のみ可）
 export const sportsCategory = defineCategory('sports', 'スポーツ・熱血', [
   preset({
     name: '熱血', font: 'Anton', color: '#ff3300', italic: true, spacing: 3,
@@ -66,5 +67,27 @@ export const sportsCategory = defineCategory('sports', 'スポーツ・熱血', 
     strokes: [{ color: '#2a2a3a', width: 5 }],
     shadow: { opacity: 0.5 },
     gradient: { from: '#c0c0d0', to: '#f8f8ff', direction: 'horizontal' },
+  }),
+  preset({
+    name: '稲妻ボルト', font: 'Dela Gothic One', color: '#ffee33', italic: true,
+    strokes: [{ color: '#1a2a8a', width: 6 }, { color: '#0a0a2a', width: 3 }],
+    shadow: { color: '#3355ff', opacity: 0.6, blur: 14, offsetX: 4, offsetY: 4 },
+    gradient: { from: '#ffffff', via: '#ffee33', to: '#ffaa00' },
+  }),
+  preset({
+    name: '実況中継', font: 'Russo One', color: '#ffffff', spacing: 3,
+    strokes: [{ color: '#d81a1a', width: 6 }, { color: '#28060a', width: 3 }],
+    shadow: { opacity: 0.65, blur: 2, offsetX: 5, offsetY: 5 },
+  }),
+  preset({
+    name: 'ファイヤーダッシュ', font: 'Anton', color: '#ff6600', italic: true, spacing: 3,
+    strokes: [{ color: '#ffffff', width: 3 }, { color: '#4a0c00', width: 7 }],
+    shadow: { color: '#ff3300', opacity: 0.6, blur: 18, offsetX: 6, offsetY: 2 },
+    gradient: { from: '#ffee00', via: '#ff8800', to: '#ff2200' },
+  }),
+  preset({
+    name: '逆転勝利', font: 'Russo One', color: '#ffdd00',
+    strokes: [{ color: '#00287a', width: 7 }, { color: '#ffffff', width: 3 }],
+    shadow: { opacity: 0.7, blur: 0, offsetX: 5, offsetY: 5 },
   }),
 ]);

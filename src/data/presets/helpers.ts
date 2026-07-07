@@ -18,7 +18,7 @@ export interface PresetInput {
   strokes?: StrokeInput[];
   /** 指定すると enabled: true でデフォルト値にマージ */
   shadow?: Partial<Omit<Shadow, 'enabled'>>;
-  gradient?: { from: string; to: string; direction?: 'horizontal' | 'vertical' };
+  gradient?: { from: string; via?: string; to: string; direction?: Gradient['direction'] };
 }
 
 const DISABLED_STROKE: StrokeLayer = { enabled: false, color: '#000000', width: 4 };
@@ -46,6 +46,7 @@ export function preset(input: PresetInput): TelopPresetSeed {
         enabled: true,
         stops: [
           { offset: 0, color: input.gradient.from },
+          ...(input.gradient.via ? [{ offset: 0.5, color: input.gradient.via }] : []),
           { offset: 1, color: input.gradient.to },
         ],
         direction: input.gradient.direction ?? 'vertical',

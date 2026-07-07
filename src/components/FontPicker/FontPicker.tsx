@@ -1,17 +1,14 @@
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 import type { ChangeEvent } from 'react';
-import { FontPickerModal } from './FontPickerModal';
 
 interface Props {
   value: string;
-  previewText: string;
   onChange: (fontFamily: string) => void;
-  localFonts: string[];
   onLocalFontAdd: (fontFamily: string) => void;
+  onOpenModal: () => void;
 }
 
-export function FontPicker({ value, previewText, onChange, localFonts, onLocalFontAdd }: Props) {
-  const [isOpen, setIsOpen] = useState(false);
+export function FontPicker({ value, onChange, onLocalFontAdd, onOpenModal }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +34,7 @@ export function FontPicker({ value, previewText, onChange, localFonts, onLocalFo
         type="button"
         className="font-dropdown-trigger"
         style={{ fontFamily: value, flex: 1 }}
-        onClick={() => setIsOpen(true)}
+        onClick={onOpenModal}
         aria-haspopup="dialog"
       >
         <span className="font-dropdown-label">{value}</span>
@@ -58,16 +55,6 @@ export function FontPicker({ value, previewText, onChange, localFonts, onLocalFo
         style={{ display: 'none' }}
         onChange={handleFileChange}
       />
-
-      {isOpen && (
-        <FontPickerModal
-          currentFont={value}
-          previewText={previewText}
-          localFonts={localFonts}
-          onSelect={font => { onChange(font); setIsOpen(false); }}
-          onClose={() => setIsOpen(false)}
-        />
-      )}
     </div>
   );
 }

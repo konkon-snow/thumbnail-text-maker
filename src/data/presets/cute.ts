@@ -1,5 +1,6 @@
 import { defineCategory, preset } from './helpers';
 
+// 注意: プリセット id は配列 index から生成される。既存要素の途中挿入・削除・並べ替えは禁止（末尾追加のみ可）
 export const cuteCategory = defineCategory('cute', 'キュート', [
   preset({
     name: 'ピーチ', font: 'Hachi Maru Pop', color: '#ff9ecb',
@@ -72,5 +73,38 @@ export const cuteCategory = defineCategory('cute', 'キュート', [
     strokes: [{ color: '#ffffff', width: 5 }, { color: '#b35900', width: 2 }],
     shadow: { opacity: 0.3 },
     gradient: { from: '#ffd9a3', to: '#ff9e5c' },
+  }),
+  preset({
+    name: 'わたあめ', font: 'Mochiy Pop One', color: '#fface0',
+    strokes: [{ color: '#ffffff', width: 6 }, { color: '#d16aa8', width: 2 }],
+    shadow: { opacity: 0.3 },
+    gradient: { from: '#ffb8e0', via: '#e8c8ff', to: '#a8d8ff', direction: 'diagonal' },
+  }),
+  preset({
+    name: 'シュガーミルク', font: 'Kiwi Maru', color: '#fff5fa', bold: true,
+    strokes: [{ color: '#e8a3c8', width: 6 }],
+    shadow: { color: '#d98ab0', opacity: 0.35, blur: 10, offsetX: 0, offsetY: 3 },
+  }),
+  preset({
+    name: 'ユニコーン', font: 'Mochiy Pop One', color: '#c8a3ff',
+    strokes: [{ color: '#ffffff', width: 6 }],
+    shadow: { color: '#b380ff', opacity: 0.45, blur: 14, offsetX: 0, offsetY: 0 },
+    gradient: { from: '#ffb3d9', via: '#c8a3ff', to: '#a3e8ff', direction: 'horizontal' },
+  }),
+  preset({
+    name: 'ラムネソーダ', font: 'Kiwi Maru', color: '#8fd4ff', bold: true,
+    strokes: [{ color: '#ffffff', width: 5 }, { color: '#2a6ab0', width: 2 }],
+    shadow: { opacity: 0.3 },
+  }),
+  preset({
+    name: 'クリームソーダ', font: 'Mochiy Pop One', color: '#a8e8b8',
+    strokes: [{ color: '#ffffff', width: 6 }, { color: '#2a8a4a', width: 2 }],
+    shadow: { opacity: 0.3 },
+  }),
+  preset({
+    name: 'キャンディポップ', font: 'Kiwi Maru', color: '#ff8ab8', bold: true,
+    strokes: [{ color: '#fff0f8', width: 5 }, { color: '#b03060', width: 2 }],
+    shadow: { opacity: 0.35 },
+    gradient: { from: '#ffa8cc', to: '#ff6699' },
   }),
 ]);

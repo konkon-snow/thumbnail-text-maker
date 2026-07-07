@@ -1,5 +1,7 @@
 import { defineCategory, preset } from './helpers';
 
+// 注意: プリセット id は配列 index から生成される。既存要素の途中挿入・削除・並べ替えは禁止（末尾追加のみ可）
+
 export const handwritingCategory = defineCategory('hand', '手書き・ナチュラル', [
   preset({
     name: '墨筆', font: 'Klee One', color: '#2a2a2a', bold: true,
@@ -64,5 +66,36 @@ export const handwritingCategory = defineCategory('hand', '手書き・ナチュ
     name: 'らくがき鉛筆', font: 'Yomogi', color: '#4a4a55',
     strokes: [{ color: '#d9d9e0', width: 3 }],
     shadow: { opacity: 0.25 },
+  }),
+  preset({
+    name: '青マーカー', font: 'Yusei Magic', color: '#2b7de0', bold: true,
+    strokes: [{ color: '#ffffff', width: 5 }],
+    shadow: { opacity: 0.25 },
+  }),
+  preset({
+    name: '極太マジック', font: 'Yusei Magic', color: '#1f1f28', bold: true,
+    strokes: [{ color: '#ffffff', width: 6 }],
+    shadow: { opacity: 0.3, blur: 4, offsetX: 2, offsetY: 2 },
+  }),
+  preset({
+    name: 'シャーペンノート', font: 'Zen Kurenaido', color: '#5c6270',
+    strokes: [{ color: '#f2f2f5', width: 3 }],
+    shadow: { opacity: 0.2 },
+  }),
+  preset({
+    name: '赤ペン添削', font: 'Zen Kurenaido', color: '#e0442a', bold: true,
+    strokes: [{ color: '#fff8f0', width: 4 }],
+    shadow: { opacity: 0.25 },
+  }),
+  preset({
+    name: '毛筆', font: 'Yuji Syuku', color: '#1f1f1f', bold: true,
+    strokes: [{ color: '#f2ecd9', width: 5 }],
+    shadow: { opacity: 0.35, blur: 6, offsetX: 3, offsetY: 3 },
+  }),
+  preset({
+    name: '朱筆', font: 'Yuji Syuku', color: '#d94f2a', bold: true,
+    strokes: [{ color: '#fff4e0', width: 5 }],
+    shadow: { opacity: 0.3 },
+    gradient: { from: '#e06a3a', to: '#b03818' },
   }),
 ]);

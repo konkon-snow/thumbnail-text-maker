@@ -1,5 +1,6 @@
 import { defineCategory, preset } from './helpers';
 
+// 注意: プリセット id は配列 index から生成される。既存要素の途中挿入・削除・並べ替えは禁止（末尾追加のみ可）
 export const simpleCategory = defineCategory('simple', 'シンプル', [
   preset({
     name: '白・黒フチ', font: 'Noto Sans JP', color: '#ffffff', bold: true,
@@ -59,5 +60,35 @@ export const simpleCategory = defineCategory('simple', 'シンプル', [
     name: 'アイボリー明朝', font: 'New Tegomin', color: '#f2ead8', bold: true,
     strokes: [{ color: '#3a3a3a', width: 4 }],
     shadow: { opacity: 0.4 },
+  }),
+  preset({
+    name: '白・黒フチ角ゴ', font: 'Zen Kaku Gothic New', color: '#ffffff', bold: true,
+    strokes: [{ color: '#000000', width: 6 }],
+    shadow: { opacity: 0.45, blur: 6, offsetX: 3, offsetY: 3 },
+  }),
+  preset({
+    name: 'UDゴシック白', font: 'BIZ UDPGothic', color: '#ffffff', bold: true,
+    strokes: [{ color: '#1a1a1a', width: 5 }],
+    shadow: { opacity: 0.4, blur: 5, offsetX: 2, offsetY: 2 },
+  }),
+  preset({
+    name: '墨色・白フチ', font: 'Zen Kaku Gothic New', color: '#2b2b2b', bold: true,
+    strokes: [{ color: '#ffffff', width: 6 }],
+    shadow: { opacity: 0.3 },
+  }),
+  preset({
+    name: 'グレー二重フチ', font: 'BIZ UDPGothic', color: '#ffffff', bold: true,
+    strokes: [{ color: '#55555f', width: 4 }, { color: '#ffffff', width: 2 }],
+    shadow: { opacity: 0.35 },
+  }),
+  preset({
+    name: '白・エンジフチ', font: 'Zen Kaku Gothic New', color: '#ffffff', bold: true,
+    strokes: [{ color: '#8e1b2f', width: 6 }],
+    shadow: { opacity: 0.4 },
+  }),
+  preset({
+    name: 'モスグリーン', font: 'BIZ UDPGothic', color: '#f4f1e8', bold: true,
+    strokes: [{ color: '#3d5a3d', width: 6 }],
+    shadow: { opacity: 0.35 },
   }),
 ]);

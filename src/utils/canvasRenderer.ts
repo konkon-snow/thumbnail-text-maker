@@ -1,14 +1,15 @@
 import type { TextBox, SnapLine } from '../types';
 
 export const FONT_CATEGORIES = [
-  { label: '太字インパクト', fonts: ['Dela Gothic One', 'Black Han Sans'] },
-  { label: '定番ゴシック', fonts: ['Noto Sans JP', 'M PLUS 1p'] },
-  { label: '丸ゴシック', fonts: ['Zen Maru Gothic', 'Rounded Mplus 1c'] },
-  { label: '明朝', fonts: ['Noto Serif JP', 'Shippori Mincho'] },
-  { label: '手書き風', fonts: ['Klee One', 'Yomogi'] },
-  { label: 'ゲーム日本語', fonts: ['Rampart One', 'Reggae One', 'Hachi Maru Pop'] },
-  { label: 'ドット/レトロ', fonts: ['DotGothic16', 'New Tegomin'] },
-  { label: '英語', fonts: ['Bebas Neue', 'Oswald', 'Anton', 'Orbitron', 'Russo One', 'Press Start 2P'] },
+  { label: '太字インパクト', fonts: ['Dela Gothic One', 'Black Han Sans', 'Potta One'] },
+  { label: '定番ゴシック', fonts: ['Noto Sans JP', 'M PLUS 1p', 'Zen Kaku Gothic New', 'BIZ UDPGothic'] },
+  { label: '丸ゴシック・ポップ', fonts: ['Zen Maru Gothic', 'Rounded Mplus 1c', 'Kiwi Maru', 'Mochiy Pop One'] },
+  { label: '明朝・和風', fonts: ['Noto Serif JP', 'Shippori Mincho', 'Zen Old Mincho', 'Shippori Antique B1', 'Kaisei Decol'] },
+  { label: '筆・手書き風', fonts: ['Klee One', 'Yomogi', 'Yusei Magic', 'Yuji Syuku', 'Zen Kurenaido'] },
+  { label: 'ゲーム・バラエティ', fonts: ['Rampart One', 'Reggae One', 'Hachi Maru Pop', 'Cherry Bomb One', 'Monomaniac One'] },
+  { label: '音楽・ネオン', fonts: ['RocknRoll One', 'Train One', 'Monoton', 'Orbitron'] },
+  { label: 'ドット/レトロ', fonts: ['DotGothic16', 'New Tegomin', 'Stick'] },
+  { label: '英語', fonts: ['Bebas Neue', 'Oswald', 'Anton', 'Russo One', 'Press Start 2P', 'Pacifico', 'Permanent Marker'] },
 ] as const;
 
 type Ctx = CanvasRenderingContext2D;
@@ -163,7 +164,9 @@ export function drawTextBox(ctx: Ctx, box: TextBox, options: { selected?: boolea
     const grad =
       box.gradient.direction === 'horizontal'
         ? ctx.createLinearGradient(box.x, box.y, box.x + maxWidth, box.y)
-        : ctx.createLinearGradient(box.x, box.y, box.x, box.y + totalHeight);
+        : box.gradient.direction === 'diagonal'
+          ? ctx.createLinearGradient(box.x, box.y, box.x + maxWidth, box.y + totalHeight)
+          : ctx.createLinearGradient(box.x, box.y, box.x, box.y + totalHeight);
     for (const stop of box.gradient.stops) {
       grad.addColorStop(stop.offset, stop.color);
     }

@@ -21,7 +21,8 @@ export interface GradientStop {
 export interface Gradient {
   enabled: boolean;
   stops: GradientStop[];
-  direction: 'horizontal' | 'vertical';
+  /** diagonal = 左上 → 右下 */
+  direction: 'horizontal' | 'vertical' | 'diagonal';
 }
 
 export interface TextBox {

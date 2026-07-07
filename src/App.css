@@ -652,6 +652,49 @@ body {
   flex: 1;
 }
 
+/* ─── Style modal (design/font tabs) ─── */
+.style-modal-tabs {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.style-modal-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 10px;
+  transition: color .1s, border-color .1s;
+}
+
+.style-modal-tab:hover {
+  color: var(--text);
+}
+
+.style-modal-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.style-modal-panel {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.style-modal-panel[hidden] {
+  display: none;
+}
+
+.style-modal-panel > .font-modal-body {
+  flex: 1;
+}
+
 .telop-preview-control {
   display: flex;
   align-items: center;
@@ -836,6 +879,27 @@ body {
 .sub-controls {
   padding-left: 4px;
   padding-top: 4px;
+}
+
+.gradient-swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.gradient-swatch {
+  height: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0;
+  cursor: pointer;
+  transition: border-color .1s, transform .1s;
+}
+
+.gradient-swatch:hover {
+  border-color: var(--accent);
+  transform: scale(1.08);
 }
 
 /* ─── Export section ─── */

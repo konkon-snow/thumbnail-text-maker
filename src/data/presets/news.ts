@@ -1,5 +1,6 @@
 import { defineCategory, preset } from './helpers';
 
+// 注意: プリセット id は配列 index から生成される。既存要素の途中挿入・削除・並べ替えは禁止（末尾追加のみ可）
 export const newsCategory = defineCategory('news', 'ニュース・速報', [
   preset({
     name: '速報レッド', font: 'Noto Sans JP', color: '#ffffff', bold: true,
@@ -57,5 +58,25 @@ export const newsCategory = defineCategory('news', 'ニュース・速報', [
     strokes: [{ color: '#1e3a5c', width: 7 }],
     shadow: { opacity: 0.5 },
     gradient: { from: '#ffffff', to: '#c8d8e8' },
+  }),
+  preset({
+    name: '警告オレンジ', font: 'BIZ UDPGothic', color: '#ffffff', bold: true,
+    strokes: [{ color: '#ff6a00', width: 6 }, { color: '#4d2200', width: 2 }],
+    shadow: { opacity: 0.6, blur: 0 },
+  }),
+  preset({
+    name: 'テレビ欄', font: 'Zen Kaku Gothic New', color: '#ffffff', bold: true,
+    strokes: [{ color: '#222222', width: 4 }],
+    shadow: { opacity: 0.35, blur: 4, offsetX: 2, offsetY: 2 },
+  }),
+  preset({
+    name: 'ワイドショー', font: 'Zen Kaku Gothic New', color: '#ffffff', bold: true,
+    strokes: [{ color: '#cc0066', width: 7 }],
+    shadow: { opacity: 0.5 },
+  }),
+  preset({
+    name: '深夜ニュース', font: 'BIZ UDPGothic', color: '#d8e2f0', bold: true,
+    strokes: [{ color: '#101828', width: 7 }],
+    shadow: { opacity: 0.5 },
   }),
 ]);

@@ -32,39 +32,54 @@
 - 太字・斜体・文字間隔・行間
 - 縁取り: 最大3重（各レイヤーで色・太さ個別設定）
 - ドロップシャドウ
-- グラデーション文字色
+- グラデーション文字色: 2〜3色（中間色の追加/削除）・方向は縦/横/斜め・プリセットスウォッチ 14 種（`src/data/gradientPresets.ts`）
 - 不透明度: 非対応
+
+### デザインプリセット（テロップデザイン）
+- 14 カテゴリ 249 種（`src/data/presets/*.ts`、`preset()` ヘルパーで定義）
+- **プリセット id はカテゴリ内の配列 index から生成される。既存要素の途中挿入・削除・並べ替えは禁止（末尾追加のみ可）**。localStorage の「最近使ったデザイン」が id を参照するため
 
 ### フォント一覧（Google Fonts）
 | カテゴリ | フォント |
 |---------|---------|
-| 太字インパクト | Dela Gothic One、Black Han Sans |
-| 定番ゴシック | Noto Sans JP、M PLUS 1p |
-| 丸ゴシック | Zen Maru Gothic、Rounded Mplus 1c |
-| 明朝 | Noto Serif JP、Shippori Mincho |
-| 手書き風 | Klee One、Yomogi |
-| 英語 | Bebas Neue、Oswald、Anton |
+| 太字インパクト | Dela Gothic One、Black Han Sans、Potta One |
+| 定番ゴシック | Noto Sans JP、M PLUS 1p、Zen Kaku Gothic New、BIZ UDPGothic |
+| 丸ゴシック・ポップ | Zen Maru Gothic、Rounded Mplus 1c、Kiwi Maru、Mochiy Pop One |
+| 明朝・和風 | Noto Serif JP、Shippori Mincho、Zen Old Mincho、Shippori Antique B1、Kaisei Decol |
+| 筆・手書き風 | Klee One、Yomogi、Yusei Magic、Yuji Syuku、Zen Kurenaido |
+| ゲーム・バラエティ | Rampart One、Reggae One、Hachi Maru Pop、Cherry Bomb One、Monomaniac One |
+| 音楽・ネオン | RocknRoll One、Train One、Monoton、Orbitron |
+| ドット/レトロ | DotGothic16、New Tegomin、Stick |
+| 英語 | Bebas Neue、Oswald、Anton、Russo One、Press Start 2P、Pacifico、Permanent Marker |
+
+一覧の実体は `src/utils/canvasRenderer.ts` の `FONT_CATEGORIES`。追加時は `index.html` の Google Fonts `<link>` にも family を追記する。
 
 ### UI レイアウト
 - PC: 左パネル（設定）＋ 右（Canvas プレビュー）
 - Mobile: 上（Canvas）＋ 下（設定パネル）
 
-## ディレクトリ構成（予定）
+## ディレクトリ構成
 
 ```
 src/
   components/
     Canvas/        # Canvasレンダリング・ドラッグ操作
-    TextPanel/     # テキスト設定パネル（フォント・エフェクト等）
+    TextPanel/     # テキスト設定パネル（モーダル開閉 state・デザイン適用を集約）
     StrokeLayer/   # 縁取りレイヤー設定（最大3つ）
-    FontPicker/    # フォント選択・アップロード
+    FontPicker/    # フォント選択トリガー・ローカルフォントアップロード
+    StyleModal/    # デザイン/フォント統合モーダル（タブ切替。選択で適用して閉じる）
+    TelopGallery/  # プリセットカード（canvas サムネ描画）・描画キュー
   hooks/
     useCanvas.ts   # Canvas描画ロジック
     useDrag.ts     # ドラッグ＆ドロップ＋スナップ
+  data/
+    presets/           # デザインプリセット（カテゴリ別。末尾追加のみ可）
+    telopPresets.ts    # カテゴリ統合・id 検索・TextBox 変換
+    gradientPresets.ts # グラデーションスウォッチ定義
   types/
-    index.ts       # TextBox, StrokeLayer, Shadow 等の型定義
+    index.ts       # TextBox, StrokeLayer, Shadow, Gradient 等の型定義
   utils/
-    canvasRenderer.ts  # Canvas描画・PNG書き出し
+    canvasRenderer.ts  # Canvas描画・PNG書き出し・FONT_CATEGORIES
     snapGuide.ts       # スナップガイド計算
 ```
 

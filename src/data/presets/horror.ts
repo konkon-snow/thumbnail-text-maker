@@ -1,5 +1,7 @@
 import { defineCategory, preset } from './helpers';
 
+// 注意: プリセット id は配列 index から生成される。既存要素の途中挿入・削除・並べ替えは禁止（末尾追加のみ可）
+
 export const horrorCategory = defineCategory('horror', 'ホラー・不穏', [
   preset({
     name: '血文字', font: 'Shippori Mincho', color: '#b30000', bold: true,
@@ -63,5 +65,20 @@ export const horrorCategory = defineCategory('horror', 'ホラー・不穏', [
     strokes: [{ color: '#000000', width: 8 }],
     shadow: { opacity: 0.9, blur: 2, offsetX: 6, offsetY: 6 },
     gradient: { from: '#ff4444', to: '#8a0000' },
+  }),
+  preset({
+    name: '血痕', font: 'Shippori Antique B1', color: '#c41a1a', bold: true,
+    strokes: [{ color: '#000000', width: 6 }],
+    shadow: { color: '#8a0000', opacity: 0.7, blur: 6, offsetX: 0, offsetY: 8 },
+  }),
+  preset({
+    name: '怪談ろうそく', font: 'Shippori Antique B1', color: '#dce8dc',
+    strokes: [{ color: '#0d1a14', width: 7 }],
+    shadow: { color: '#66ffcc', opacity: 0.4, blur: 18, offsetX: 0, offsetY: 0 },
+  }),
+  preset({
+    name: '緊急サイレン', font: 'Russo One', color: '#ffffff', bold: true,
+    strokes: [{ color: '#cc0000', width: 5 }, { color: '#1a0000', width: 3 }],
+    shadow: { color: '#ff0000', opacity: 0.7, blur: 16, offsetX: 0, offsetY: 0 },
   }),
 ]);

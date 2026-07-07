@@ -1,8 +1,13 @@
-import { memo } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import type { TextBox } from '../../types';
 import type { AlignH, AlignV } from '../../utils/canvasRenderer';
+import type { TelopPreset } from '../../data/presets/types';
+import { findPreset, presetToTextBoxUpdates } from '../../data/telopPresets';
+import { useRecentPresets } from '../../hooks/useRecentPresets';
 import { FontPicker } from '../FontPicker/FontPicker';
 import { StrokeLayerPanel } from '../StrokeLayer/StrokeLayerPanel';
+import { StyleModal, type StyleModalTab } from '../StyleModal/StyleModal';
+import { GradientSection } from './GradientSection';
 import { StylePresets } from './StylePresets';
 
 interface Props {
@@ -15,6 +20,26 @@ interface Props {
 }
 
 export const TextPanel = memo(function TextPanel({ box, onChange, onDelete, onAlign, localFonts, onLocalFontAdd }: Props) {
+  const [openTab, setOpenTab] = useState<StyleModalTab | null>(null);
+  const [appliedId, setAppliedId] = useState<string | null>(null);
+  const { recentIds, pushRecent } = useRecentPresets();
+
+  const applyPreset = useCallback(
+    (preset: TelopPreset) => {
+      onChange(presetToTextBoxUpdates(preset));
+      setAppliedId(preset.id);
+      pushRecent(preset.id);
+    },
+    [onChange, pushRecent],
+  );
+
+  const recentPresets = useMemo(
+    () => recentIds.map(findPreset).filter((p): p is TelopPreset => p !== undefined),
+    [recentIds],
+  );
+
+  const previewText = box.text.split('\n')[0].slice(0, 6) || 'あア';
+
   return (
     <div className="text-panel">
 
@@ -29,15 +54,23 @@ export const TextPanel = memo(function TextPanel({ box, onChange, onDelete, onAl
         />
       </section>
 
+      {/* デザイン */}
+      <StylePresets
+        box={box}
+        appliedId={appliedId}
+        recentPresets={recentPresets}
+        onApplyPreset={applyPreset}
+        onOpenGallery={() => setOpenTab('design')}
+      />
+
       {/* フォント */}
       <section className="panel-section">
         <h3 className="section-title">フォント</h3>
         <FontPicker
           value={box.fontFamily}
-          previewText={box.text}
           onChange={fontFamily => onChange({ fontFamily })}
-          localFonts={localFonts}
           onLocalFontAdd={onLocalFontAdd}
+          onOpenModal={() => setOpenTab('font')}
         />
         <div className="row-control">
           <label>サイズ</label>
@@ -50,27 +83,6 @@ export const TextPanel = memo(function TextPanel({ box, onChange, onDelete, onAl
               onChange={e => onChange({ fontSize: Math.max(8, parseInt(e.target.value) || 64) })}
             />
             <span className="unit">px</span>
-          </div>
-        </div>
-      </section>
-
-      {/* 配置 */}
-      <section className="panel-section">
-        <h3 className="section-title">配置</h3>
-        <div className="row-control">
-          <label>水平</label>
-          <div className="toggle-group">
-            <button className="toggle-btn" type="button" title="左端" onClick={() => onAlign('left', null)}>⇤</button>
-            <button className="toggle-btn" type="button" title="中央" onClick={() => onAlign('center', null)}>↔</button>
-            <button className="toggle-btn" type="button" title="右端" onClick={() => onAlign('right', null)}>⇥</button>
-          </div>
-        </div>
-        <div className="row-control">
-          <label>垂直</label>
-          <div className="toggle-group">
-            <button className="toggle-btn" type="button" title="上端" onClick={() => onAlign(null, 'top')}>⇡</button>
-            <button className="toggle-btn" type="button" title="中央" onClick={() => onAlign(null, 'middle')}>↕</button>
-            <button className="toggle-btn" type="button" title="下端" onClick={() => onAlign(null, 'bottom')}>⇣</button>
           </div>
         </div>
       </section>
@@ -130,8 +142,26 @@ export const TextPanel = memo(function TextPanel({ box, onChange, onDelete, onAl
         </div>
       </section>
 
-      {/* テロップデザイン */}
-      <StylePresets box={box} onChange={onChange} />
+      {/* 配置 */}
+      <section className="panel-section">
+        <h3 className="section-title">配置</h3>
+        <div className="row-control">
+          <label>水平</label>
+          <div className="toggle-group">
+            <button className="toggle-btn" type="button" title="左端" onClick={() => onAlign('left', null)}>⇤</button>
+            <button className="toggle-btn" type="button" title="中央" onClick={() => onAlign('center', null)}>↔</button>
+            <button className="toggle-btn" type="button" title="右端" onClick={() => onAlign('right', null)}>⇥</button>
+          </div>
+        </div>
+        <div className="row-control">
+          <label>垂直</label>
+          <div className="toggle-group">
+            <button className="toggle-btn" type="button" title="上端" onClick={() => onAlign(null, 'top')}>⇡</button>
+            <button className="toggle-btn" type="button" title="中央" onClick={() => onAlign(null, 'middle')}>↕</button>
+            <button className="toggle-btn" type="button" title="下端" onClick={() => onAlign(null, 'bottom')}>⇣</button>
+          </div>
+        </div>
+      </section>
 
       {/* 縁取り */}
       <section className="panel-section">
@@ -223,54 +253,7 @@ export const TextPanel = memo(function TextPanel({ box, onChange, onDelete, onAl
       </section>
 
       {/* グラデーション */}
-      <section className="panel-section">
-        <div className="section-title-row">
-          <h3 className="section-title">グラデーション</h3>
-          <label className="toggle-switch">
-            <input
-              type="checkbox"
-              checked={box.gradient.enabled}
-              onChange={e => onChange({ gradient: { ...box.gradient, enabled: e.target.checked } })}
-            />
-            <span className="toggle-track" />
-          </label>
-        </div>
-        {box.gradient.enabled && (
-          <div className="sub-controls">
-            <div className="row-control">
-              <label>方向</label>
-              <select
-                value={box.gradient.direction}
-                onChange={e =>
-                  onChange({
-                    gradient: {
-                      ...box.gradient,
-                      direction: e.target.value as 'horizontal' | 'vertical',
-                    },
-                  })
-                }
-              >
-                <option value="vertical">縦</option>
-                <option value="horizontal">横</option>
-              </select>
-            </div>
-            {box.gradient.stops.map((stop, i) => (
-              <div key={i} className="row-control">
-                <label>{i === 0 ? '開始色' : '終了色'}</label>
-                <input
-                  type="color"
-                  value={stop.color}
-                  onChange={e => {
-                    const next = [...box.gradient.stops];
-                    next[i] = { ...stop, color: e.target.value };
-                    onChange({ gradient: { ...box.gradient, stops: next } });
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+      <GradientSection box={box} onChange={onChange} />
 
       {/* 削除 */}
       <div className="panel-section">
@@ -278,6 +261,19 @@ export const TextPanel = memo(function TextPanel({ box, onChange, onDelete, onAl
           このテキストを削除
         </button>
       </div>
+
+      {openTab !== null && (
+        <StyleModal
+          initialTab={openTab}
+          initialPreviewText={previewText}
+          currentFont={box.fontFamily}
+          localFonts={localFonts}
+          appliedPresetId={appliedId}
+          onApplyPreset={applyPreset}
+          onSelectFont={fontFamily => onChange({ fontFamily })}
+          onClose={() => setOpenTab(null)}
+        />
+      )}
     </div>
   );
 });
