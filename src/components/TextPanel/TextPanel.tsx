@@ -130,8 +130,8 @@ export const TextPanel = memo(function TextPanel({ box, onChange, onDelete, onAl
         </div>
       </section>
 
-      {/* スタイルプリセット */}
-      <StylePresets onChange={onChange} />
+      {/* テロップデザイン */}
+      <StylePresets box={box} onChange={onChange} />
 
       {/* 縁取り */}
       <section className="panel-section">
